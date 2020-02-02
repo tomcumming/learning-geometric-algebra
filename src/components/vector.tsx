@@ -7,14 +7,25 @@ export type Props = {
   lineWidth: number;
   label?: string;
   color: string;
+  origin?: [number, number];
 };
 
-export default function Vector({ x, y, lineWidth, color, label }: Props) {
+export default function Vector({
+  x,
+  y,
+  lineWidth,
+  color,
+  label,
+  origin
+}: Props) {
+  const ox = origin === undefined ? 0 : origin[0];
+  const oy = origin === undefined ? 0 : origin[1];
+
   return (
     <>
       <line
-        x1={0}
-        y1={0}
+        x1={ox}
+        y1={-oy}
         x2={x}
         y2={-y}
         strokeWidth={lineWidth}

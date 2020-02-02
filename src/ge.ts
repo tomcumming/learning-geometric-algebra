@@ -20,7 +20,6 @@ export function makeProduct<Basis extends string>(
         const el2 = bItem[0] as Basis;
         const scale2 = bItem[1] as number;
         const lookup = table[el1][el2];
-        console.log("lookup result", el1, el2, lookup, scale1, scale2);
         return lookup !== undefined
           ? [[lookup[0], lookup[1] * scale1 * scale2]]
           : [];
