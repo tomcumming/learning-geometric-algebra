@@ -5,11 +5,14 @@ const guideColor = "#aaa";
 type Props = {
   width: number;
   height: number;
+
+  lineWidth: number;
 };
 
 export default function Graph({
   width,
   height,
+  lineWidth,
   children
 }: React.PropsWithChildren<Props>) {
   const left = width / -2;
@@ -18,11 +21,7 @@ export default function Graph({
   const bottom = height / 2;
 
   return (
-    <svg
-      className="graph"
-      viewBox={`${left} ${top} ${width} ${height}`}
-      transform="scale(1, -1)"
-    >
+    <svg className="graph" viewBox={`${left} ${top} ${width} ${height}`}>
       {Array.from(range(left, right)).map(x => (
         <line
           key={x}
@@ -30,7 +29,7 @@ export default function Graph({
           y1={top}
           x2={x}
           y2={bottom}
-          strokeWidth={0.025}
+          strokeWidth={lineWidth}
           stroke={guideColor}
         />
       ))}
@@ -41,7 +40,7 @@ export default function Graph({
           y1={y}
           x2={right}
           y2={y}
-          strokeWidth={0.025}
+          strokeWidth={lineWidth}
           stroke={guideColor}
         />
       ))}

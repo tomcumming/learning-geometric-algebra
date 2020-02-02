@@ -9,8 +9,9 @@ import Vector from "./components/vector";
 
 function init() {
   ReactDom.render(
-    <Graph width={6} height={6}>
-      <Vector x={2} y={2} color="red" />
+    <Graph width={6} height={6} lineWidth={0.05}>
+      <Vector x={2} y={2} color="red" lineWidth={0.1} label="red" />
+      <Vector x={-1} y={-2} color="blue" lineWidth={0.1} label="blue" />
     </Graph>,
     document.querySelector("#wrapper")
   );
