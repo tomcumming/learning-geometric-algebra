@@ -5,9 +5,10 @@ import { MultiVector } from "./ge";
 import { product, G2 } from "./algebra/g2";
 
 import G2demo from "./components/g2";
+import PGA2Ddemo from "./components/2dgpa";
 
 function init() {
-  ReactDom.render(<G2demo />, document.querySelector("#wrapper"));
+  ReactDom.render(<PGA2Ddemo />, document.querySelector("#wrapper"));
 }
 
 init();
