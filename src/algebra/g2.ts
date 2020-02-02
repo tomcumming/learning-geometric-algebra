@@ -1,5 +1,6 @@
 import { makeProduct, MultiplicationTable } from "../ge";
 
+/** 2 Dimensional Clifford Algebra */
 export type G2 = "s" | "e1" | "e2" | "e12";
 
 const g2MultiplicationTable: MultiplicationTable<G2> = {

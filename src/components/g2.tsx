@@ -10,6 +10,7 @@ import { G2, product } from "../algebra/g2";
 export default function G2Demo() {
   return (
     <>
+      <h1>2 Dimensional Clifford Algebra</h1>
       <Product />
     </>
   );
