@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "jsx": "preserve"
   },
-  "files": ["src/index.ts"]
+  "files": ["src/index.tsx"]
 }
