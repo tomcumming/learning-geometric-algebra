@@ -8,7 +8,13 @@ import G2demo from "./components/g2";
 import PGA2Ddemo from "./components/2dgpa";
 
 function init() {
-  ReactDom.render(<PGA2Ddemo />, document.querySelector("#wrapper"));
+  ReactDom.render(
+    <div style={{ maxWidth: "100vmin" }}>
+      <G2demo />x
+      <PGA2Ddemo />
+    </div>,
+    document.querySelector("#wrapper")
+  );
 }
 
 init();

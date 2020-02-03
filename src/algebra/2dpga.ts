@@ -1,4 +1,4 @@
-import { MultiplicationTable, makeProduct } from "../ge";
+import { MultiplicationTable, makeProduct, MultiVector } from "../ge";
 
 export type PGA2 =
   | "s" // Scalar
@@ -78,3 +78,27 @@ const mulitplicationTable: MultiplicationTable<PGA2> = {
 };
 
 export const product = makeProduct(mulitplicationTable);
+
+export function dual({
+  s,
+  e0,
+  e1,
+  e2,
+  e01,
+  e20,
+  e12,
+  e012
+}: Partial<MultiVector<PGA2>>): Partial<MultiVector<PGA2>> {
+  const parts: [PGA2, undefined | number][] = [
+    ["s", e012],
+    ["e0", e12],
+    ["e1", e20],
+    ["e2", e01],
+    ["e01", e2],
+    ["e20", e1],
+    ["e12", e0],
+    ["e012", s]
+  ];
+
+  return Object.fromEntries(parts.filter(([_, x]) => x !== undefined));
+}
