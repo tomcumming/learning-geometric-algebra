@@ -12,9 +12,7 @@ export default function Point({ x, y, color, lineWidth, label }: Props) {
   return (
     <>
       <circle cx={x} cy={-y} fill={color} r={lineWidth} />
-      {label === undefined ? (
-        undefined
-      ) : (
+      {label === undefined ? undefined : (
         <text
           x={x}
           y={-(y + 0.1)}

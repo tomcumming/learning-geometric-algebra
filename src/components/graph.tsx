@@ -13,7 +13,7 @@ export default function Graph({
   width,
   height,
   lineWidth,
-  children
+  children,
 }: React.PropsWithChildren<Props>) {
   const left = width / -2;
   const right = width / 2;
@@ -22,7 +22,7 @@ export default function Graph({
 
   return (
     <svg className="graph" viewBox={`${left} ${top} ${width} ${height}`}>
-      {Array.from(range(left, right)).map(x => (
+      {Array.from(range(left, right)).map((x) => (
         <line
           key={x}
           x1={x}
@@ -33,7 +33,7 @@ export default function Graph({
           stroke={guideColor}
         />
       ))}
-      {Array.from(range(top, bottom)).map(y => (
+      {Array.from(range(top, bottom)).map((y) => (
         <line
           key={y}
           x1={left}

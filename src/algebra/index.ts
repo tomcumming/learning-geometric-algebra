@@ -59,8 +59,8 @@ export class MultiVector<B extends Basis> {
   }
 
   restrict(...input: (number | Vector)[][]): MultiVector<B> {
-    const vss = input.map(vs => vs.map(n => n.toString()));
-    const terms: Term[] = vss.map(vs => {
+    const vss = input.map((vs) => vs.map((n) => n.toString()));
+    const terms: Term[] = vss.map((vs) => {
       const existing = this.elem(...vs);
       return [existing, ...vs];
     });
@@ -106,7 +106,7 @@ export class MultiVector<B extends Basis> {
 
   dual(): MultiVector<B> {
     const opposite = new Map<string, string>();
-    const names = elems(this.basis).map(vs => vs.join(""));
+    const names = elems(this.basis).map((vs) => vs.join(""));
     for (let idx = 0; idx < names.length; idx += 1)
       opposite.set(names[idx], names[names.length - idx - 1]);
 

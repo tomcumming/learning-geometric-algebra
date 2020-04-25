@@ -23,25 +23,22 @@ function Test() {
   const l1 = MultiVector.sumTerms(basis, [
     [-0.5, "1"],
     [-1, "2"],
-    [2 + Math.sin(time) * 0.5, "0"]
+    [2 + Math.sin(time) * 0.5, "0"],
   ]);
 
   const p1 = MultiVector.sumTerms(basis, [
     [-3 + Math.sin(time) * 0.5, "2", "0"],
     [-3 + Math.cos(time) * 0.5, "0", "1"],
-    ["1", "2"]
+    ["1", "2"],
   ]);
 
   const p2 = MultiVector.sumTerms(basis, [
     [0 + Math.cos(time) * 0.5, "2", "0"],
     [-1 + Math.sin(-time) * 0.5, "0", "1"],
-    ["1", "2"]
+    ["1", "2"],
   ]);
 
-  const prodLine = p1
-    .dual()
-    .mul(p2.dual())
-    .dual();
+  const prodLine = p1.dual().mul(p2.dual()).dual();
   const joinLine = prodLine.restrict([0], [1], [2]);
 
   const joinY = (x: number) =>

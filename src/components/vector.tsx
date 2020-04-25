@@ -16,7 +16,7 @@ export default function Vector({
   lineWidth,
   color,
   label,
-  origin
+  origin,
 }: Props) {
   const ox = origin === undefined ? 0 : origin[0];
   const oy = origin === undefined ? 0 : origin[1];
@@ -31,9 +31,7 @@ export default function Vector({
         strokeWidth={lineWidth}
         stroke={color}
       />
-      {label === undefined ? (
-        undefined
-      ) : (
+      {label === undefined ? undefined : (
         <text
           x={x}
           y={-y}
