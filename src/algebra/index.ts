@@ -42,6 +42,11 @@ export function normalizeTerm(basis: Basis, parts: Term): Term {
 export class MultiVector {
   private constructor(private readonly parts: Map<string, number>) {}
 
+  basis(...vs: number[]): number {
+    const existing = this.parts.get(vs.join(""));
+    return existing === undefined ? 0 : existing;
+  }
+
   static sumTerms(basis: Basis, terms: Term[]): MultiVector {
     let parts = new Map<string, number>();
 
