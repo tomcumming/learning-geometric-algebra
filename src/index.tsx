@@ -8,7 +8,7 @@ function init() {
   ReactDom.render(
     <div style={{ maxWidth: "100vmin" }}>
       <G2demo />
-      {/* <PGA2Ddemo /> */}
+      <PGA2Ddemo />
     </div>,
     document.querySelector("#wrapper")
   );

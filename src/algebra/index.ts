@@ -1,3 +1,5 @@
+import { allCombinations } from "./combinations";
+
 export type Basis = [number, number, number];
 
 export type Vector = string;
@@ -37,15 +39,33 @@ export function normalizeTerm(basis: Basis, parts: Term): Term {
   }
 }
 
+export function elems([positives, negatives, zeros]: Basis): Vector[][] {
+  let vectors: Vector[] = [];
+  for (let v = 0; v < positives + negatives + zeros; v += 1)
+    vectors.push(v.toString());
+
+  return allCombinations(vectors);
+}
+
 export class MultiVector<B extends Basis> {
   private constructor(
     readonly basis: B,
     private readonly parts: Map<string, number>
   ) {}
 
-  elem(...vs: number[]): number {
+  elem(...vs: number[] | Vector[]): number {
     const existing = this.parts.get(vs.join(""));
     return existing === undefined ? 0 : existing;
+  }
+
+  restrict(...input: (number | Vector)[][]): MultiVector<B> {
+    const vss = input.map(vs => vs.map(n => n.toString()));
+    const terms: Term[] = vss.map(vs => {
+      const existing = this.elem(...vs);
+      return [existing, ...vs];
+    });
+
+    return MultiVector.sumTerms(this.basis, terms);
   }
 
   static sumTerms<B extends Basis>(basis: B, terms: Term[]): MultiVector<B> {
@@ -81,6 +101,19 @@ export class MultiVector<B extends Basis> {
     for (const term of this.asTerms())
       for (const otherTerm of other.asTerms())
         terms.push([...term, ...otherTerm]);
+    return MultiVector.sumTerms(this.basis, terms);
+  }
+
+  dual(): MultiVector<B> {
+    const opposite = new Map<string, string>();
+    const names = elems(this.basis).map(vs => vs.join(""));
+    for (let idx = 0; idx < names.length; idx += 1)
+      opposite.set(names[idx], names[names.length - idx - 1]);
+
+    let terms: Term[] = [];
+    for (const [vs, s] of this.parts)
+      terms.push([s, ...Array.from(opposite.get(vs) as string)]);
+
     return MultiVector.sumTerms(this.basis, terms);
   }
 

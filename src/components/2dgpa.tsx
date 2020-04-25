@@ -3,8 +3,10 @@ import * as React from "react";
 import Graph from "./graph";
 import Point from "./point";
 import useTime from "../hooks/time";
-import { MultiVector } from "../ge";
-import { PGA2, product, dual } from "../algebra/2dpga";
+import { MultiVector } from "../algebra";
+
+type Basis = [2, 0, 1]; // 2d Projective
+const basis: Basis = [2, 0, 1];
 
 export default function GPA2DDemo() {
   return (
@@ -15,62 +17,49 @@ export default function GPA2DDemo() {
   );
 }
 
-function euclideanPoint(
-  x: number,
-  y: number
-): Pick<MultiVector<PGA2>, "e20" | "e01" | "e12"> {
-  return {
-    e20: x,
-    e01: y,
-    e12: 1
-  };
-}
-
 function Test() {
   const time = useTime();
 
-  const l1: Pick<MultiVector<PGA2>, "e1" | "e2" | "e0"> = {
-    e1: -0.5,
-    e2: -1,
-    e0: 2 + Math.sin(time) * 0.5
-  };
+  const l1 = MultiVector.sumTerms(basis, [
+    [-0.5, "1"],
+    [-1, "2"],
+    [2 + Math.sin(time) * 0.5, "0"]
+  ]);
 
-  const p1: Pick<MultiVector<PGA2>, "e20" | "e01" | "e12"> = {
-    e20: -3 + Math.sin(time) * 0.5,
-    e01: -3 + Math.cos(time) * 0.5,
-    e12: 1
-  };
+  const p1 = MultiVector.sumTerms(basis, [
+    [-3 + Math.sin(time) * 0.5, "2", "0"],
+    [-3 + Math.cos(time) * 0.5, "0", "1"],
+    ["1", "2"]
+  ]);
 
-  const p2: Pick<MultiVector<PGA2>, "e20" | "e01" | "e12"> = {
-    e20: 0 + Math.cos(time) * 0.5,
-    e01: -1 + Math.sin(-time) * 0.5,
-    e12: 1
-  };
+  const p2 = MultiVector.sumTerms(basis, [
+    [0 + Math.cos(time) * 0.5, "2", "0"],
+    [-1 + Math.sin(-time) * 0.5, "0", "1"],
+    ["1", "2"]
+  ]);
 
-  const prodLine = dual(product(dual(p1), dual(p2))) as Pick<
-    MultiVector<PGA2>,
-    "e0" | "e1" | "e2"
-  >;
-  const joinLine = { e0: prodLine.e0, e1: prodLine.e1, e2: prodLine.e2 };
+  const prodLine = p1
+    .dual()
+    .mul(p2.dual())
+    .dual();
+  const joinLine = prodLine.restrict([0], [1], [2]);
 
-  const joinY = (x: number) => (joinLine.e1 * x + joinLine.e0) / -joinLine.e2;
+  const joinY = (x: number) =>
+    (joinLine.elem(1) * x + joinLine.elem(0)) / -joinLine.elem(2);
 
-  const intProd = product(joinLine, l1) as Pick<
-    MultiVector<PGA2>,
-    "e20" | "e01" | "e12"
-  >;
-  const intMeet = product({ s: 1 / intProd.e12 }, intProd) as Pick<
-    MultiVector<PGA2>,
-    "e20" | "e01" | "e12"
-  >;
+  const intProd = joinLine.mul(l1);
+
+  const intMeet = MultiVector.sumTerms(basis, [[1 / intProd.elem(1, 2)]]).mul(
+    intProd
+  );
 
   return (
     <Graph width={10} height={10} lineWidth={0.05}>
       <line
         x1={-5}
-        y1={-((l1.e1 * -5 + l1.e0) / -l1.e2)}
+        y1={-((l1.elem(1) * -5 + l1.elem(0)) / -l1.elem(2))}
         x2={5}
-        y2={-((l1.e1 * 5 + l1.e0) / -l1.e2)}
+        y2={-((l1.elem(1) * 5 + l1.elem(0)) / -l1.elem(2))}
         stroke="blue"
         strokeWidth={0.05}
       />
@@ -84,13 +73,25 @@ function Test() {
         strokeWidth={0.05}
       />
 
-      <Point x={p1.e20} y={p1.e01} color={"green"} lineWidth={0.1} label="P1" />
-
-      <Point x={p2.e20} y={p2.e01} color={"green"} lineWidth={0.1} label="P2" />
+      <Point
+        x={-p1.elem(0, 2)}
+        y={p1.elem(0, 1)}
+        color={"green"}
+        lineWidth={0.1}
+        label="P1"
+      />
 
       <Point
-        x={intMeet.e20}
-        y={intMeet.e01}
+        x={-p2.elem(0, 2)}
+        y={p2.elem(0, 1)}
+        color={"green"}
+        lineWidth={0.1}
+        label="P2"
+      />
+
+      <Point
+        x={-intMeet.elem(0, 2)}
+        y={intMeet.elem(0, 1)}
         color="red"
         lineWidth={0.1}
         label="Intersection"
