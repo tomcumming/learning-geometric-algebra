@@ -5,7 +5,7 @@ import useTime from "../hooks/time";
 import Graph from "./graph";
 import Vector from "./vector";
 
-import { MultiVector, Basis } from "../algebra";
+import { MultiVector } from "../algebra";
 
 export default function G2Demo() {
   return (
@@ -16,30 +16,27 @@ export default function G2Demo() {
   );
 }
 
-const basis: Basis = {
-  zero: 0,
-  positive: 2,
-  negative: 0
-};
+type Basis = [2, 0, 0]; // 2d Vectorspace GA
+const basis: Basis = [2, 0, 0];
 
 function Product() {
   const time = useTime();
 
-  const v: MultiVector = MultiVector.sumTerms(basis, [
+  const v = MultiVector.sumTerms(basis, [
     [Math.cos(time) * 2, "0"],
     [Math.sin(time) * 2, "1"]
   ]);
   const u = MultiVector.sumTerms(basis, [[3, "1"]]);
 
-  const p = v.mul(basis, u);
-  const dot = p.basis();
-  const wedge = p.basis(0, 1);
+  const p = v.mul(u);
+  const dot = p.elem();
+  const wedge = p.elem(0, 1);
 
   const wedgePoints = [
     [0, 0],
-    [v.basis(0), v.basis(1)],
-    [v.basis(0) + u.basis(0), v.basis(1) + u.basis(1)],
-    [u.basis(0), u.basis(1)]
+    [v.elem(0), v.elem(1)],
+    [v.elem(0) + u.elem(0), v.elem(1) + u.elem(1)],
+    [u.elem(0), u.elem(1)]
   ];
 
   return (
@@ -53,15 +50,15 @@ function Product() {
         />
 
         <Vector
-          x={v.basis(0) as number}
-          y={v.basis(1) as number}
+          x={v.elem(0) as number}
+          y={v.elem(1) as number}
           color="red"
           lineWidth={0.1}
           label="𝑣"
         />
         <Vector
-          x={u.basis(0) as number}
-          y={u.basis(1) as number}
+          x={u.elem(0) as number}
+          y={u.elem(1) as number}
           color="blue"
           lineWidth={0.1}
           label="𝑢"

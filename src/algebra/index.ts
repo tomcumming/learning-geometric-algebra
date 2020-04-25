@@ -1,8 +1,4 @@
-export type Basis = {
-  zero: number;
-  positive: number;
-  negative: number;
-};
+export type Basis = [number, number, number];
 
 export type Vector = string;
 export type Scalar = number;
@@ -26,8 +22,10 @@ export function normalizeTerm(basis: Basis, parts: Term): Term {
       const headN = parseInt(head);
       const secondN = parseInt(second);
       if (headN === secondN) {
-        if (headN < basis.zero) return [0];
-        else if (headN < basis.zero + basis.positive) return rest;
+        const [positives, _negatives, zeros] = basis;
+
+        if (headN < zeros) return [0];
+        else if (headN < zeros + positives) return rest;
         else return normalizeTerm(basis, [-1, ...rest]);
       } else if (headN > secondN) {
         return normalizeTerm(basis, [-1, second, head, ...rest]);
@@ -39,15 +37,18 @@ export function normalizeTerm(basis: Basis, parts: Term): Term {
   }
 }
 
-export class MultiVector {
-  private constructor(private readonly parts: Map<string, number>) {}
+export class MultiVector<B extends Basis> {
+  private constructor(
+    readonly basis: B,
+    private readonly parts: Map<string, number>
+  ) {}
 
-  basis(...vs: number[]): number {
+  elem(...vs: number[]): number {
     const existing = this.parts.get(vs.join(""));
     return existing === undefined ? 0 : existing;
   }
 
-  static sumTerms(basis: Basis, terms: Term[]): MultiVector {
+  static sumTerms<B extends Basis>(basis: B, terms: Term[]): MultiVector<B> {
     let parts = new Map<string, number>();
 
     for (const term of terms) {
@@ -68,19 +69,19 @@ export class MultiVector {
     const zeros = Array.from(parts).filter(([_vs, p]) => p === 0);
     for (const [zeroVs] of zeros) parts.delete(zeroVs);
 
-    return new MultiVector(parts);
+    return new MultiVector(basis, parts);
   }
 
   asTerms(): Term[] {
     return Array.from(this.parts).map(([vs, s]) => [s, ...Array.from(vs)]);
   }
 
-  mul(basis: Basis, other: MultiVector): MultiVector {
+  mul(other: MultiVector<B>): MultiVector<B> {
     let terms: Term[] = [];
     for (const term of this.asTerms())
       for (const otherTerm of other.asTerms())
         terms.push([...term, ...otherTerm]);
-    return MultiVector.sumTerms(basis, terms);
+    return MultiVector.sumTerms(this.basis, terms);
   }
 
   toString(): string {
