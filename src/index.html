@@ -2,6 +2,19 @@
 <html>
   <head>
     <script async src="index.tsx"></script>
+    <style>
+      table tr th.odd-blade {
+        background-color: lightgray;
+      }
+
+      table tr td {
+        background-color: lightyellow;
+      }
+      table tr:nth-child(even) td:nth-child(even),
+      table tr:nth-child(odd) td:nth-child(odd) {
+        background: lightblue;
+      }
+    </style>
   </head>
   <body>
     <div id="wrapper"></div>
