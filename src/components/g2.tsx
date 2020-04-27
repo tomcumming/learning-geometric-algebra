@@ -50,15 +50,15 @@ function Product() {
         />
 
         <Vector
-          x={v.elem(0) as number}
-          y={v.elem(1) as number}
+          x={v.elem(0)}
+          y={v.elem(1)}
           color="red"
           lineWidth={0.1}
           label="𝑣"
         />
         <Vector
-          x={u.elem(0) as number}
-          y={u.elem(1) as number}
+          x={u.elem(0)}
+          y={u.elem(1)}
           color="blue"
           lineWidth={0.1}
           label="𝑢"
